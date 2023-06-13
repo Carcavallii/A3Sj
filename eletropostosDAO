@@ -1,0 +1,99 @@
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JTextArea;
+
+public class EletropostoDAO {
+
+    private String eletroposto;
+    private String regiao;
+    private String endereço;
+
+    public String getEletroposto() {
+        return eletroposto;
+    }
+
+    public void setEletroposto(String eletroposto) {
+        this.eletroposto = eletroposto;
+    }
+
+    public String getRegiao() {
+        return regiao;
+    }
+
+    public void setRegiao(String regiao) {
+        this.regiao = regiao;
+    }
+
+    public String getEndereço() {
+        return endereço;
+    }
+
+    public void setEndereço(String endereço) {
+        this.endereço = endereço;
+    }
+
+    public ArrayList<String> obterEletropostosPorRegiao(String regiaoSelecionada) throws Exception {
+        ArrayList<String> eletropostos = new ArrayList<>();
+        String sql = "SELECT eletroposto FROM tb_eletropostos WHERE regiao = ?";
+
+        try (Connection conn = ConnectionFactory.obtemConexao(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, regiaoSelecionada);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    String eletroposto = rs.getString("eletroposto");
+                    eletropostos.add(eletroposto);
+                }
+            }
+        }
+        return eletropostos;
+    }
+
+    public void cadastrarEletroposto() {
+//1: Definir o comando SQL
+        String sql = "INSERT INTO tb_eletropostos(eletroposto, regiao, endereço ) VALUES (?, ?, ?)";
+//2: Abrir uma conexão
+        ConnectionFactory factory = new ConnectionFactory();
+        try (Connection c = factory.obtemConexao()) {
+//3: Pré compila o comando
+            PreparedStatement ps = c.prepareStatement(sql);
+//4: Preenche os dados faltantes
+            ps.setString(1, eletroposto);
+            ps.setString(2, regiao);
+            ps.setString(3, endereço);
+
+//5: Executa o comando
+            ps.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void listarEletropostos(JTextArea textArea) throws Exception {
+        String sql = "SELECT * FROM tb_eletropostos";
+        try (Connection conn = ConnectionFactory.obtemConexao();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            StringBuilder sb = new StringBuilder();
+            while (rs.next()) {
+                String eletroposto = rs.getString("eletroposto");
+                String regiao = rs.getString("regiao");
+                String endereço = rs.getString("endereço");
+
+                // Adicione as informações ao StringBuilder
+                sb.append("Eletroposto: ").append(eletroposto).append("\n");
+                sb.append("Região: ").append(regiao).append("\n");
+                sb.append("Endereço: ").append(endereço).append("\n\n");
+            }
+
+            // Defina o texto completo do JTextArea
+            textArea.setText(sb.toString());
+        }
+    }
+
+}
