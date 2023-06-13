@@ -1,0 +1,114 @@
+
+import java.util.List;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+
+public class DAO {
+
+    public boolean existeUsuario(Usuario usuario)
+            throws Exception {
+        String sql = "SELECT * FROM tb_usuario WHERE nome = ? AND senha = ?";
+        try (Connection conn = ConnectionFactory.obtemConexao(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, usuario.getNome());
+            ps.setString(2, usuario.getSenha());
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        }
+    }
+
+    private int codigo;
+    private String nome;
+    private String senha;
+
+    public int getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(int codigo) {
+        this.codigo = codigo;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+    public void inserir() {
+//1: Definir o comando SQL
+        String sql = "INSERT INTO tb_usuario(nome, senha ) VALUES (?, ?)";
+//2: Abrir uma conexão
+        ConnectionFactory factory = new ConnectionFactory();
+        try (Connection c = factory.obtemConexao()) {
+//3: Pré compila o comando
+            PreparedStatement ps = c.prepareStatement(sql);
+//4: Preenche os dados faltantes
+            ps.setString(1, nome);
+            ps.setString(2, senha);
+
+//5: Executa o comando
+            ps.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void atualizarUsuario() {
+        String sql = "UPDATE tb_usuario SET nome = ?, senha = ? WHERE codigo = ?";
+
+        ConnectionFactory factory = new ConnectionFactory();
+        try (Connection c = factory.obtemConexao()) {
+            // Pré-compila o comando
+            PreparedStatement ps = c.prepareStatement(sql);
+
+            // Preenche os dados faltantes
+            ps.setString(1, getNome());
+            ps.setString(2, getSenha());
+            ps.setInt(3, getCodigo());
+
+            // Executa o comando
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public String listarUsuario() {
+        String sql = "SELECT * FROM tb_usuario";
+        ConnectionFactory factory = new ConnectionFactory();
+
+        try (Connection connection = factory.obtemConexao(); Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(sql)) {
+
+            StringBuilder tabela = new StringBuilder();
+
+            
+            while (resultSet.next()) {
+                tabela.append(resultSet.getInt("codigo")).append("\t")
+                        .append(resultSet.getString("nome")).append("\t")
+                        .append(resultSet.getString("senha")).append("\n");
+            }
+
+            return tabela.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ""; 
+    }
+
+}
