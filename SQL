@@ -1,0 +1,49 @@
+#CREATE DATABASE db_pessoas;
+ USE db_pessoas;
+ #CREATE TABLE tb_pessoa(
+#CREATE TABLE tb_administrador(
+ #codigo INT PRIMARY KEY auto_increment,
+ #nome VARCHAR(200),
+ #senha VARCHAR(200)
+ #);
+ 
+#INSERT INTO tb_pessoa( NOME, SENHA) VALUES( 'RODRIGO' , '1234'),
+#('NICOLAU', '1234');
+
+#SELECT * FROM tb_usuario;
+#CREATE TABLE tb_eletropostos(
+#id int primary key auto_increment,
+#eletroposto VARCHAR(200),
+#regiao varchar(200),
+#endereço varchar(200)
+#);
+
+#INSERT INTO tb_eletropostos( eletroposto, regiao, endereço) VALUES( 'Eletroposto Centro automotivo Porto Seguro' , 'Zona Sul', 'Av. Morumbi, 8456');
+#select * from tb_eletropostos
+
+#select * from tb_usuario;
+
+#CREATE TABLE tb_avaliação(
+#id int primary key auto_increment,
+#gostou VARCHAR(200),
+#deslike VARCHAR(200)
+#);
+
+select * from tb_avaliação;
+#insert into tb_avaliação( gostou, deslike) VALUES (' gostei ', ' deslike ' );
+#DESCRIBE tb_avaliação;
+
+
+
+#INSERT INTO tb_administrador( NOME, SENHA) VALUES( 'JOAO' , '1234');
+
+#SELECT * FROM tb_administrador
+
+
+
+ 
+ 
+ 
+ 
+ 
+
