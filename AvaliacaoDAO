@@ -1,0 +1,33 @@
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+
+public class AvaliacaoDAO {
+
+   public void atualizarAvaliacao(int id, boolean gostou) throws Exception {
+        ConnectionFactory factory = new ConnectionFactory();
+
+        try (Connection connection = factory.obtemConexao(); 
+                PreparedStatement statement = connection.prepareStatement("UPDATE tb_avaliação SET gostou = 1 + ?, deslike = 1 + ? WHERE id = ?")) {
+
+            // Verificar se é um "gostei" ou "deslike" e atualizar a coluna apropriada
+            if (gostou) {
+                statement.setInt(1, 1);
+                statement.setInt(2, 0);
+            } else {
+                statement.setInt(1, 0);
+                statement.setInt(2, 1);
+            }
+
+            statement.setInt(3, id);
+
+            // Executar a atualização
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+}
